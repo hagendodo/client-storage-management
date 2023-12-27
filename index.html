@@ -16,52 +16,109 @@
     <div class="container mt-5">
       <h2>Item CRUD</h2>
 
-      <!-- Form to create or update item -->
-      <form id="itemForm">
-        <input type="hidden" id="itemId" readonly />
-        <div class="mb-3">
-          <label for="itemName" class="form-label">Name:</label>
-          <input type="text" class="form-control" id="itemName" required />
-        </div>
-        <div class="mb-3">
-          <label for="itemDescription" class="form-label">Description:</label>
-          <textarea class="form-control" id="itemDescription"></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="itemQuantity" class="form-label">Quantity:</label>
-          <input
-            type="number"
-            class="form-control"
-            id="itemQuantity"
-            value="0"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label for="itemSeller" class="form-label">Seller:</label>
-          <input type="text" class="form-control" id="itemSeller" />
-        </div>
-        <div class="mb-3">
-          <label for="itemLocation" class="form-label">Location:</label>
-          <input type="text" class="form-control" id="itemLocation" />
-        </div>
-        <div class="mb-3">
-          <label for="itemWarranty" class="form-label">Warranty:</label>
-          <input type="text" class="form-control" id="itemWarranty" />
-        </div>
-        <div class="mb-3">
-          <label for="itemPayment" class="form-label">Payment:</label>
-          <select class="form-control" id="itemPayment">
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
-        </div>
-        <!-- Add other fields as needed -->
+      <!-- Button to trigger the modal -->
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#itemModal"
+      >
+        Add Item
+      </button>
 
-        <button type="button" class="btn btn-primary" onclick="saveItem()">
-          Save
-        </button>
-      </form>
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="itemModal"
+        tabindex="-1"
+        aria-labelledby="itemModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="itemModalLabel">Item Details</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <!-- Form to create or update item -->
+              <form id="itemForm">
+                <input type="hidden" id="itemId" readonly />
+                <div class="mb-3">
+                  <label for="itemName" class="form-label">Name:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="itemName"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="itemDescription" class="form-label"
+                    >Description:</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="itemDescription"
+                  ></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="itemQuantity" class="form-label">Quantity:</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="itemQuantity"
+                    value="0"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="itemSeller" class="form-label">Seller:</label>
+                  <input type="text" class="form-control" id="itemSeller" />
+                </div>
+                <div class="mb-3">
+                  <label for="itemLocation" class="form-label">Location:</label>
+                  <input type="text" class="form-control" id="itemLocation" />
+                </div>
+                <div class="mb-3">
+                  <label for="itemWarranty" class="form-label">Warranty:</label>
+                  <input type="text" class="form-control" id="itemWarranty" />
+                </div>
+                <div class="mb-3">
+                  <label for="itemPayment" class="form-label">Payment:</label>
+                  <select class="form-control" id="itemPayment">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
+                <!-- Add other fields as needed -->
+
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="saveItem()"
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Table to display items -->
       <table class="table mt-4">
@@ -166,7 +223,7 @@
         // Configure it: Use POST method for creating/updating items
         xhr.open(
           itemId ? "PATCH" : "POST",
-          itemId ? `${API_URL}/${itemId}` : "${API_URL}"
+          itemId ? `${API_URL}/${itemId}` : `${API_URL}`
         );
 
         // Set Content-Type header
