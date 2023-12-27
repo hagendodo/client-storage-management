@@ -238,7 +238,7 @@
 
         // Set callback function to handle response
         xhr.onload = function () {
-          if (xhr.status === 201) {
+          if (xhr.status === 201 || xhr.status === 200) {
             // Success: Reload table
             loadItems();
             // Clear form
