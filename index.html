@@ -238,7 +238,7 @@
 
         // Set callback function to handle response
         xhr.onload = function () {
-          if (xhr.status === 200) {
+          if (xhr.status === 201) {
             // Success: Reload table
             loadItems();
             // Clear form
@@ -252,7 +252,7 @@
 
         // Prepare data and send
         const data = {
-          _id: itemId,
+          _id: itemId ? itemId : undefined, // or itemId || undefined
           name: itemName,
           description: itemDescription,
           quantity: itemQuantity,
