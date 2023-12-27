@@ -1,16 +1,39 @@
+const API_URL = "https://api-storage-management.vercel.app";
 function loadItems() {
   // Create XMLHttpRequest object
   const xhr = new XMLHttpRequest();
 
   // Configure it: Use GET method for fetching items
-  xhr.open("GET", "http://localhost:5000");
+  xhr.open("GET", `${API_URL}`);
 
   // Set callback function to handle response
   xhr.onload = function () {
     if (xhr.status === 200) {
       // Success: Update table with data
       const items = JSON.parse(xhr.responseText);
-      updateTable(items);
+      updateTable(items.data);
+    } else {
+      // Error: Log the error
+      console.error(xhr.statusText);
+    }
+  };
+
+  // Send the request
+  xhr.send();
+}
+
+function deleteItem(itemId) {
+  // Create XMLHttpRequest object
+  const xhr = new XMLHttpRequest();
+
+  // Configure it: Use DELETE method for deleting items
+  xhr.open("DELETE", `${API_URL}/${itemId}`);
+
+  // Set callback function to handle response
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // Success: Reload table
+      loadItems();
     } else {
       // Error: Log the error
       console.error(xhr.statusText);
@@ -36,18 +59,22 @@ function saveItem() {
   const xhr = new XMLHttpRequest();
 
   // Configure it: Use POST method for creating/updating items
-  xhr.open(itemId ? "PUT" : "POST", "http://localhost:5000");
+  xhr.open(
+    itemId ? "PATCH" : "POST",
+    itemId ? `${API_URL}/${itemId}` : `${API_URL}`
+  );
 
   // Set Content-Type header
   xhr.setRequestHeader("Content-Type", "application/json");
 
   // Set callback function to handle response
   xhr.onload = function () {
-    if (xhr.status === 200) {
+    if (xhr.status === 201 || xhr.status === 200) {
       // Success: Reload table
       loadItems();
       // Clear form
       document.getElementById("itemForm").reset();
+      window.location.reload();
     } else {
       // Error: Log the error
       console.error(xhr.statusText);
@@ -56,7 +83,7 @@ function saveItem() {
 
   // Prepare data and send
   const data = {
-    _id: itemId,
+    _id: itemId ? itemId : undefined, // or itemId || undefined
     name: itemName,
     description: itemDescription,
     quantity: itemQuantity,
@@ -64,7 +91,6 @@ function saveItem() {
     location: itemLocation,
     warranty: itemWarranty,
     payment: itemPayment,
-    // Add other fields as needed
   };
 
   xhr.send(JSON.stringify(data));
@@ -100,10 +126,10 @@ function updateTable(items) {
 function editItem(itemId) {
   // Find the item by ID and populate the form
   const xhr = new XMLHttpRequest();
-  xhr.open("GET", `http://localhost:5000/${itemId}`);
+  xhr.open("GET", `${API_URL}/${itemId}`);
   xhr.onload = function () {
     if (xhr.status === 200) {
-      const item = JSON.parse(xhr.responseText);
+      const item = JSON.parse(xhr.responseText).data;
       document.getElementById("itemId").value = item._id;
       document.getElementById("itemName").value = item.name;
       document.getElementById("itemDescription").value = item.description;
@@ -115,11 +141,16 @@ function editItem(itemId) {
         ? "true"
         : "false";
       // Populate other fields as needed
+      $("#exampleModal").modal("show");
     } else {
       console.error(xhr.statusText);
     }
   };
   xhr.send();
+}
+
+function clearModal() {
+  window.location.reload();
 }
 
 // Initial load of items
